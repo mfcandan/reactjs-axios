@@ -20,8 +20,12 @@ class App extends Component {
   }
 
   getPosts = async () => {
-    let data = await api.get('/').then(({data}) => data);
+    try {
+      let data = await api.get('/').then(({data}) => data);
       this.setState({ posts: data});
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   createPost = async () => {
