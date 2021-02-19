@@ -21,7 +21,13 @@ class App extends Component {
 
   getPosts = async () => {
     try {
-      let data = await api.get('/').then(({data}) => data);
+      //Eğer tek api kullanılıyorsa
+      //let data = await api.get('/').then(({data}) => data);
+      //Değilse:
+      let data = await axios({
+        method: 'get',
+        url: 'https://jsonplaceholder.typicode.com/posts',
+      }).then(({data}) => data);
       this.setState({ posts: data});
     } catch (error) {
       console.log(error);
