@@ -5,7 +5,10 @@ import axios from 'axios';
 
 
 const api = axios.create({
-  baseURL: 'https://jsonplaceholder.typicode.com/posts'
+  baseURL: 'https://jsonplaceholder.typicode.com/posts',
+  headers: {
+    'X-auth-key': "token123"
+  }
 })
 
 class App extends Component {
