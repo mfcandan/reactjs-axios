@@ -14,13 +14,12 @@ const api = axios.create({
 class App extends Component {
   state = {
     posts: [],
-    limit: 2,
+    limit: 10,
   }
 
   constructor() {
     super();
     this.getPosts();
-
   }
 
   getPosts = async () => {
