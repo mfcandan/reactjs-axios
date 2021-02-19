@@ -10,7 +10,8 @@ const api = axios.create({
 
 class App extends Component {
   state = {
-    posts: []
+    posts: [],
+    limit: 2,
   }
 
   constructor() {
@@ -22,16 +23,28 @@ class App extends Component {
   getPosts = async () => {
     try {
       //Eğer tek api kullanılıyorsa
-      //let data = await api.get('/').then(({data}) => data);
-      //Değilse:
+      /*
+      let data = await api.get('/', {
+        params: {
+          _limit: 10,
+          _start: 0
+        }
+      }).then(({ data }) => data);
+      this.setState({ posts: data});
+      */
+      //Tek Değilse:
+      
       let data = await axios({
         method: 'get',
         url: 'https://jsonplaceholder.typicode.com/posts',
+        params: { _limit: this.state.limit}
       }).then(({data}) => data);
       this.setState({ posts: data});
+      
     } catch (error) {
       console.log(error);
     }
+    
   }
 
   createPost = async () => {
@@ -60,7 +73,7 @@ class App extends Component {
         <header className="App-header">
           <br></br>
           <button onClick={this.createPost}>CREATE TEMP POST</button>
-          {this.state.posts.slice(0,3).map(post => 
+          {this.state.posts.map(post => 
             <h2 key={post.id}>
               {post.title}
               <button onClick={()=> this.deletePost(post.id)}>Delete</button> 
