@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect,  Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
@@ -11,18 +11,19 @@ const api = axios.create({
   }
 })
 
-class App extends Component {
-  state = {
-    posts: [],
-    limit: 10,
-  }
+function App () {
+  const [posts, setPosts] = useState([]);
+  const [limit, setLimit] = useState(10);
 
-  constructor() {
-    super();
-    this.getPosts();
-  }
+  useEffect(() => {
+    //effect
+    getPosts();
+    return () => {
+      console.log("cleanup use effect")
+    }
+  }, [api]);
 
-  getPosts = async () => {
+  const getPosts = async () => {
     try {
       //Eğer tek api kullanılıyorsa
       /*
@@ -39,9 +40,9 @@ class App extends Component {
       let data = await axios({
         method: 'get',
         url: 'https://jsonplaceholder.typicode.com/posts',
-        params: { _limit: this.state.limit}
+        params: { _limit: limit}
       }).then(({data}) => data);
-      this.setState({ posts: data});
+      setPosts(data);
       
     } catch (error) {
       console.log(error);
@@ -49,33 +50,32 @@ class App extends Component {
     
   }
 
-  createPost = async () => {
+  const createPost = async () => {
     let res = await api
       .post('/', {title: "Test", id: 4, author: 'test'})
       .catch( error => console.log(error));
     console.log(res);
-    this.getPosts();
+    getPosts();
   }
 
-  deletePost = async (id) => {
+  const deletePost = async (id) => {
     let data = await api.delete(`/${id}`);
-    this.getPosts();
+    getPosts();
     console.log(data);
   }
 
-  updatePost = async (id, val) => {
+  const updatePost = async (id, val) => {
     let data = await api.patch(`/${id}`, { title: val })
-    this.getPosts();
+    getPosts();
     console.log(data);
   }
 
-  render() { 
-    return (
+  return (
       <div className="App">
         <header className="App-header">
           <br></br>
-          <button onClick={this.createPost}>CREATE TEMP POST</button>
-          {this.state.posts.map(post => 
+          <button onClick={createPost}>CREATE TEMP POST</button>
+          {posts.map(post => 
             <h2 key={post.id}>
               {post.title}
               <button onClick={()=> this.deletePost(post.id)}>Delete</button> 
@@ -85,8 +85,7 @@ class App extends Component {
           <br></br>
         </header>
       </div>
-    );
-  }
+  );
 }
  
 export default App;
