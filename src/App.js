@@ -29,11 +29,9 @@ class App extends Component {
   }
 
   createPost = async () => {
-    let res = await api.post('/', {
-      title: "Test",
-      id: 4,
-      author: 'test'
-    });
+    let res = await api
+      .post('/', {title: "Test", id: 4, author: 'test'})
+      .catch( error => console.log(error));
     console.log(res);
     this.getPosts();
   }
